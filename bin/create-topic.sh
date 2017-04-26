@@ -12,5 +12,5 @@ function create_topic () {
     kafka-topics --describe --topic $topic --zookeeper zookeeper:2181
 }
 
-create_topic UserRegions
-create_topic LargeRegions
+create_topic TextLinesTopic
+create_topic WordsWithCountsTopic 
