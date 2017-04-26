@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+    </wildcardResourcePatterns>
+    <bytecodeTargetLevel>
+      <module name="kafka-event-sourcing_main" target="1.8" />
+      <module name="kafka-event-sourcing_test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="Encoding">
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="createEmptyContentRootDirectories" value="true" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="1.8" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+          </set>
+        </option>
+        <option name="useAutoImport" value="true" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+  <component name="InspectionProjectProfileManager">
+    <profile version="1.0">
+      <option name="myName" value="Project Default" />
+    </profile>
+    <version value="1.0" />
+  </component>
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kafka-event-sourcing.iml" filepath="$PROJECT_DIR$/.idea/modules/kafka-event-sourcing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kafka-event-sourcing_main.iml" filepath="$PROJECT_DIR$/.idea/modules/kafka-event-sourcing_main.iml" group="kafka-event-sourcing" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kafka-event-sourcing_test.iml" filepath="$PROJECT_DIR$/.idea/modules/kafka-event-sourcing_test.iml" group="kafka-event-sourcing" />
+    </modules>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="GoToClass.includeLibraries" value="false" />
+    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="options.lastSelected" value="reference.projectsettings.compiler.javacompiler" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
+    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.scala.settings.ScalaProjectSettingsConfigurable" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
+  </component>
+  <component name="SbtLocalSettings">
+    <option name="modificationStamps">
+      <map>
+        <entry key="$PROJECT_DIR$/../pb-web" value="1462994193000" />
+      </map>
+    </option>
+    <option name="externalProjectsViewState">
+      <projects_view />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+  </component>
+  <component name="libraryTable">
+    <library name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.8.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.8.0/45b426f7796b741035581a176744d91090e2e6fb/jackson-annotations-2.8.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.8.0/29a1a95363d497e856c0a7d682e4f7973e334068/jackson-annotations-2.8.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: com.fasterxml.jackson.core:jackson-core:2.8.5">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.8.5/60d059f5d2930ccd1ef03535b713fd9f933d1ba7/jackson-core-2.8.5.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.8.5/14b04ebe5d1d9b54b793f84245d983b4c329634d/jackson-core-2.8.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.8.5">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.8.5/b3035f37e674c04dafe36a660c3815cc59f764e2/jackson-databind-2.8.5.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.8.5/b658c4640ee224391e699ebaea4a3eb1c2ea8239/jackson-databind-2.8.5-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: junit:junit:4.12">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/junit/junit/4.12/2973d150c0dc1fefe998f834810d68f278ea58ec/junit-4.12.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/junit/junit/4.12/a6c32b40bf3d76eca54e3c601e5d1470c86fcdfa/junit-4.12-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: net.jpountz.lz4:lz4:1.3.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/net.jpountz.lz4/lz4/1.3.0/c708bb2590c0652a642236ef45d9f99ff842a2ce/lz4-1.3.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/net.jpountz.lz4/lz4/1.3.0/31debfaa8a55bc4af1d4fe63a8ad0a2a7e851274/lz4-1.3.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: org.apache.kafka:connect-api:0.10.2.0-cp1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.apache.kafka/connect-api/0.10.2.0-cp1/418006a85a2c57ca1a3636b49ce85818eaf39e3c/connect-api-0.10.2.0-cp1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.apache.kafka/connect-api/0.10.2.0-cp1/368a7f2f35371ab095823cd35f3baf133ab428f0/connect-api-0.10.2.0-cp1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: org.apache.kafka:connect-json:0.10.2.0-cp1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.apache.kafka/connect-json/0.10.2.0-cp1/a083b56e048ca04aaf08d40b509a738ebcc5a92d/connect-json-0.10.2.0-cp1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.apache.kafka/connect-json/0.10.2.0-cp1/1fc903fc1bbe571778cc0a0fdb06b8504d5acbd1/connect-json-0.10.2.0-cp1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: org.apache.kafka:kafka-clients:0.10.2.0-cp1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.apache.kafka/kafka-clients/0.10.2.0-cp1/bff95148dd560f7b0ad21bd5d4d5464a34aa9ee8/kafka-clients-0.10.2.0-cp1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.apache.kafka/kafka-clients/0.10.2.0-cp1/3d8e4603c3e99753e37438e83149d93a6cac17d7/kafka-clients-0.10.2.0-cp1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: org.apache.kafka:kafka-streams:0.10.2.0-cp1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.apache.kafka/kafka-streams/0.10.2.0-cp1/136d27964f314df434bae880e19edded92318da/kafka-streams-0.10.2.0-cp1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.apache.kafka/kafka-streams/0.10.2.0-cp1/4cfc060f4efa906e7f3334f4cf717565ed945f91/kafka-streams-0.10.2.0-cp1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: org.hamcrest:hamcrest-core:1.3">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/1dc37250fbc78e23a65a67fbbaf71d2e9cbc3c0b/hamcrest-core-1.3-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: org.rocksdb:rocksdbjni:5.0.1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.rocksdb/rocksdbjni/5.0.1/7c553b9afd312fd1d444350301a12d3fb9c223aa/rocksdbjni-5.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.rocksdb/rocksdbjni/5.0.1/8efa64fa13e6798f948c42a423c6c786bfd8387e/rocksdbjni-5.0.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: org.slf4j:slf4j-api:1.7.21">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.21/139535a69a4239db087de9bab0bee568bf8e0b70/slf4j-api-1.7.21.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.21/f285ac123f201fb4b028bac556928d7cf527ef48/slf4j-api-1.7.21-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Gradle: org.xerial.snappy:snappy-java:1.1.2.6">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.xerial.snappy/snappy-java/1.1.2.6/48d92871ca286a47f230feb375f0bbffa83b85f6/snappy-java-1.1.2.6.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/gradle-2.8/caches/modules-2/files-2.1/org.xerial.snappy/snappy-java/1.1.2.6/f543a32717f60ed313f57ae746d93499298bb71/snappy-java-1.1.2.6-sources.jar!/" />
+      </SOURCES>
+    </library>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.7</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
