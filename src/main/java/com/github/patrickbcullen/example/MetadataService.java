@@ -1,4 +1,4 @@
-package com.github.patrickbcullen;
+package com.github.patrickbcullen.example;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more

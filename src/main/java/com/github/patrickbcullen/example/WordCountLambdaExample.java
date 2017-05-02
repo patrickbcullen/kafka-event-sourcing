@@ -1,4 +1,4 @@
-package com.github.patrickbcullen;
+package com.github.patrickbcullen.example;
 /**
  * Copyright 2016 Confluent Inc.
  * <p>
