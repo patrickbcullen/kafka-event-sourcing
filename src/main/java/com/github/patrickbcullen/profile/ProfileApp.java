@@ -1,7 +1,9 @@
 package com.github.patrickbcullen.profile;
 
+import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KGroupedStream;
@@ -12,6 +14,8 @@ import org.apache.kafka.streams.kstream.TimeWindows;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 
@@ -80,10 +84,20 @@ public class ProfileApp {
 
     static KafkaStreams createStreams(final Properties streamsConfiguration) {
         final Serde<String> stringSerde = Serdes.String();
-        final Serde<ProfileBean> profileSerde = Serdes.serdeFrom(ProfileBean.class);
+        Map<String, Object> serdeProps = new HashMap<>();
+
+        final Serializer<ProfileBean> profileBeanSerializer = new JsonPOJOSerializer<>();
+        serdeProps.put("JsonPOJOClass", ProfileBean.class);
+        profileBeanSerializer.configure(serdeProps, false);
+
+        final Deserializer<ProfileBean> profileBeanDeserializer = new JsonPOJODeserializer<>();
+        serdeProps.put("JsonPOJOClass", ProfileBean.class);
+        profileBeanDeserializer.configure(serdeProps, false);
+
+        final Serde<ProfileBean> profileBeanSerde = Serdes.serdeFrom(profileBeanSerializer, profileBeanDeserializer);
         KStreamBuilder builder = new KStreamBuilder();
         //TODO I need to create a stream for the POST events API and then use a store to get the data
-        KStream<String, ProfileBean> textLines = builder.stream(stringSerde, profileSerde, PROFILE_EVENTS_TOPIC);
+        KStream<String, ProfileBean> textLines = builder.stream(stringSerde, profileBeanSerde, PROFILE_EVENTS_TOPIC);
 
         /* TODO this won't work because I need to just process the events and apply them to the event store
         final KGroupedStream<String, String> groupedByWord = textLines

@@ -12,7 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/")
+@Path("api")
 public class ProfileService {
 
     private final KafkaStreams streams;
@@ -25,9 +25,10 @@ public class ProfileService {
     }
 
     @GET
-    @Path("profile/{id}")
+    @Path("/profile/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public ProfileBean getProfileByID(@PathParam("id") String id) {
+        System.out.println("IN GET METHOD");
         final ReadOnlyKeyValueStore<String, ProfileBean> store = streams.store(storeName, QueryableStoreTypes.<String, ProfileBean>keyValueStore());
         if (store == null) {
             throw new NotFoundException();
@@ -42,9 +43,10 @@ public class ProfileService {
     }
 
     @POST
-    @Path("profile")
+    @Path("/profile")
     @Produces(MediaType.APPLICATION_JSON)
     public Response createProfile(ProfileBean profile) {
+        System.out.println("IN POST METHOD");
         System.out.println(profile);
         return Response.status(201).entity(profile).build();
     }
