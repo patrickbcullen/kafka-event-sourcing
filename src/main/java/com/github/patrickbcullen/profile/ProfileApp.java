@@ -1,15 +1,16 @@
 package com.github.patrickbcullen.profile;
 
+import com.sun.scenario.effect.impl.prism.PrFilterContext;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.kstream.KGroupedStream;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KStreamBuilder;
-import org.apache.kafka.streams.kstream.TimeWindows;
+import org.apache.kafka.streams.kstream.*;
+import org.apache.kafka.streams.processor.StateStoreSupplier;
+import org.apache.kafka.streams.processor.TopologyBuilder;
+import org.apache.kafka.streams.state.Stores;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -21,7 +22,9 @@ import java.util.Properties;
 
 public class ProfileApp {
 
-    static final String PROFILE_EVENTS_TOPIC = "profile-events";
+    static final String PROFILE_EVENTS_TOPIC = "profile.events";
+    static final String PROFILE_STORE_TOPIC = "profile.topic";
+    public static final String PROFILE_STORE_NAME = "profile.store";
 
     public static void main(String[] args) throws Exception {
         int port = 8080;
@@ -60,7 +63,7 @@ public class ProfileApp {
         streams.start();
 
         // Start the Restful proxy for servicing remote access to state stores
-        final ProfileService restService = startRestProxy(streams, port);
+        final ProfileService restService = startRestProxy(streams, port, bootstrapServers);
 
         // Add shutdown hook to respond to SIGTERM and gracefully close Kafka Streams
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -74,39 +77,56 @@ public class ProfileApp {
     }
 
 
-    static ProfileService startRestProxy(final KafkaStreams streams, final int port)
-            throws Exception {
-        final ProfileService
-                profileService = new ProfileService(streams);
+    static ProfileService startRestProxy(final KafkaStreams streams, final int port, final String bootstrapServers) throws Exception {
+        final ProfileService profileService = new ProfileService(streams, PROFILE_EVENTS_TOPIC, PROFILE_STORE_NAME, bootstrapServers);
         profileService.start(port);
         return profileService;
     }
 
     static KafkaStreams createStreams(final Properties streamsConfiguration) {
-        final Serde<String> stringSerde = Serdes.String();
+        Serde<ProfileEvent> profileEventSerde = createJSONSerde(ProfileEvent.class);
+        Serde<ProfileBean> profileBeanSerde = createJSONSerde(ProfileBean.class);
+        Serde<String> stringSerde = Serdes.String();
+        StateStoreSupplier eventStoreSupplier = Stores.create(PROFILE_STORE_NAME)
+                .withKeys(stringSerde)
+                .withValues(profileBeanSerde)
+                .persistent()
+                .build();
+
+        //TODO the error B cannot be cast to java.lang.String is because the default serializer is wrong. I needs to be the profileEventSerde.
+        TopologyBuilder builder = new TopologyBuilder();
+        builder.addSource("EventSource", stringSerde.deserializer(), profileEventSerde.deserializer(), PROFILE_EVENTS_TOPIC)
+                .addProcessor("EventProcessor", () -> new ProfileEventProcessor(), "EventSource")
+                .addStateStore(eventStoreSupplier, "EventProcessor");
+
+        /*
+        KStreamBuilder builder = new KStreamBuilder();
+        // the input stream is a list of profile events
+        // each event needs to be applied to the event state store, updating the previous value
+        KStream<String, ProfileEvent> profileEventsStream = builder.stream(stringSerde, profileEventSerde, PROFILE_EVENTS_TOPIC);
+
+        KTable<String, ProfileBean> profileTable = builder.table(stringSerde, profileBeanSerde, PROFILE_STORE_TOPIC, PROFILE_STORE_NAME);
+        // this does not quite work either, maybe try the TopologyBuilder instead?
+        KTable<String, ProfileBean> songPlays = profileEventsStream.leftJoin(profileTable,
+                (value1, song) -> song, stringSerde, profileBeanSerde);
+
+        */
+        return new KafkaStreams(builder, streamsConfiguration);
+    }
+
+    static <T> Serde<T> createJSONSerde(Class<T> clazz) {
         Map<String, Object> serdeProps = new HashMap<>();
 
-        final Serializer<ProfileBean> profileBeanSerializer = new JsonPOJOSerializer<>();
-        serdeProps.put("JsonPOJOClass", ProfileBean.class);
-        profileBeanSerializer.configure(serdeProps, false);
+        final Serializer<T> serializer = new JsonPOJOSerializer<>();
+        serdeProps.put("JsonPOJOClass", clazz);
+        serializer.configure(serdeProps, false);
 
-        final Deserializer<ProfileBean> profileBeanDeserializer = new JsonPOJODeserializer<>();
-        serdeProps.put("JsonPOJOClass", ProfileBean.class);
-        profileBeanDeserializer.configure(serdeProps, false);
+        final Deserializer<T> deserializer = new JsonPOJODeserializer<>();
+        serdeProps.put("JsonPOJOClass", clazz);
+        deserializer.configure(serdeProps, false);
 
-        final Serde<ProfileBean> profileBeanSerde = Serdes.serdeFrom(profileBeanSerializer, profileBeanDeserializer);
-        KStreamBuilder builder = new KStreamBuilder();
-        //TODO I need to create a stream for the POST events API and then use a store to get the data
-        KStream<String, ProfileBean> textLines = builder.stream(stringSerde, profileBeanSerde, PROFILE_EVENTS_TOPIC);
-
-        /* TODO this won't work because I need to just process the events and apply them to the event store
-        final KGroupedStream<String, String> groupedByWord = textLines
-                .flatMapValues(value -> Arrays.asList(value.toLowerCase().split("\\W+")))
-                .groupBy((key, word) -> word, stringSerde, stringSerde);
-
-         */
-
-        return new KafkaStreams(builder, streamsConfiguration);
+        final Serde<T> serde = Serdes.serdeFrom(serializer, deserializer);
+        return serde;
     }
 }
 

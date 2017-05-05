@@ -1,2 +1,2 @@
 #!/bin/sh
-curl -XPOST -d '{"username": "foobar", "email": "foobar@gmail.com"}' http://localhost:8080/
+curl -XPOST -H "Content-Type: application/json" -d '{"username": "foobar", "email": "foobar@gmail.com"}' http://localhost:8080/api/profile
