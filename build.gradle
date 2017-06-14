@@ -2,6 +2,8 @@ group 'com.github.patrickbcullen'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'application'
+mainClassName = 'com.github.patrickbcullen.profile.ProfileApp'
 
 sourceCompatibility = 1.8
 

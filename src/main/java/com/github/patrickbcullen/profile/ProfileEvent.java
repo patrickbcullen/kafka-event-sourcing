@@ -10,10 +10,14 @@ public class ProfileEvent {
     public String username;
     public ProfileEvent() {}
 
-    public ProfileEvent(ProfileBean profile) {
+    public ProfileEvent(String eventType, ProfileBean profile) {
         this.uid = profile.uid;
         this.username = profile.username;
         this.email = profile.email;
-        this.eventType = "create";
+        this.eventType = eventType;
+    }
+
+    public ProfileEvent(String eventType) {
+        this.eventType = eventType;
     }
 }

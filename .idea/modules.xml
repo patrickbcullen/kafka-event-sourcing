@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kafka-event-sourcing.iml" filepath="$PROJECT_DIR$/.idea/modules/kafka-event-sourcing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kafka-event-sourcing.iml" filepath="$PROJECT_DIR$/kafka-event-sourcing.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/kafka-event-sourcing_main.iml" filepath="$PROJECT_DIR$/.idea/modules/kafka-event-sourcing_main.iml" group="kafka-event-sourcing" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/kafka-event-sourcing_test.iml" filepath="$PROJECT_DIR$/.idea/modules/kafka-event-sourcing_test.iml" group="kafka-event-sourcing" />
     </modules>

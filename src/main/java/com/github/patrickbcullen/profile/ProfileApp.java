@@ -25,6 +25,7 @@ public class ProfileApp {
     static final String PROFILE_EVENTS_TOPIC = "profile.events";
     static final String PROFILE_STORE_TOPIC = "profile.topic";
     public static final String PROFILE_STORE_NAME = "profile.store";
+    public static final String SEARCH_STORE_NAME = "search.store";
 
     public static void main(String[] args) throws Exception {
         int port = 8080;
@@ -78,7 +79,7 @@ public class ProfileApp {
 
 
     static ProfileService startRestProxy(final KafkaStreams streams, final int port, final String bootstrapServers) throws Exception {
-        final ProfileService profileService = new ProfileService(streams, PROFILE_EVENTS_TOPIC, PROFILE_STORE_NAME, bootstrapServers);
+        final ProfileService profileService = new ProfileService(streams, PROFILE_EVENTS_TOPIC, PROFILE_STORE_NAME, SEARCH_STORE_NAME, bootstrapServers);
         profileService.start(port);
         return profileService;
     }
@@ -87,30 +88,23 @@ public class ProfileApp {
         Serde<ProfileEvent> profileEventSerde = createJSONSerde(ProfileEvent.class);
         Serde<ProfileBean> profileBeanSerde = createJSONSerde(ProfileBean.class);
         Serde<String> stringSerde = Serdes.String();
-        StateStoreSupplier eventStoreSupplier = Stores.create(PROFILE_STORE_NAME)
+        StateStoreSupplier profileStoreSupplier = Stores.create(PROFILE_STORE_NAME)
                 .withKeys(stringSerde)
                 .withValues(profileBeanSerde)
                 .persistent()
                 .build();
 
-        //TODO the error B cannot be cast to java.lang.String is because the default serializer is wrong. I needs to be the profileEventSerde.
+        StateStoreSupplier searchStoreSupplier = Stores.create(SEARCH_STORE_NAME)
+                .withKeys(stringSerde)
+                .withValues(profileBeanSerde)
+                .persistent()
+                .build();
         TopologyBuilder builder = new TopologyBuilder();
         builder.addSource("EventSource", stringSerde.deserializer(), profileEventSerde.deserializer(), PROFILE_EVENTS_TOPIC)
                 .addProcessor("EventProcessor", () -> new ProfileEventProcessor(), "EventSource")
-                .addStateStore(eventStoreSupplier, "EventProcessor");
+                .addStateStore(profileStoreSupplier, "EventProcessor")
+                .addStateStore(searchStoreSupplier, "EventProcessor");
 
-        /*
-        KStreamBuilder builder = new KStreamBuilder();
-        // the input stream is a list of profile events
-        // each event needs to be applied to the event state store, updating the previous value
-        KStream<String, ProfileEvent> profileEventsStream = builder.stream(stringSerde, profileEventSerde, PROFILE_EVENTS_TOPIC);
-
-        KTable<String, ProfileBean> profileTable = builder.table(stringSerde, profileBeanSerde, PROFILE_STORE_TOPIC, PROFILE_STORE_NAME);
-        // this does not quite work either, maybe try the TopologyBuilder instead?
-        KTable<String, ProfileBean> songPlays = profileEventsStream.leftJoin(profileTable,
-                (value1, song) -> song, stringSerde, profileBeanSerde);
-
-        */
         return new KafkaStreams(builder, streamsConfiguration);
     }
 

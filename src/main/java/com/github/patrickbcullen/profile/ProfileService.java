@@ -14,26 +14,27 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 @Path("api")
 public class ProfileService {
 
     private final KafkaStreams streams;
-    private final String storeName;
+    private final String profileStoreName;
+    private final String searchStoreName;
     private Server jettyServer;
     private final KafkaProducer<String, ProfileEvent> profileProducer;
     private final String topic;
 
-    ProfileService(final KafkaStreams streams, final String profileEventsTopic, final String profileStoreName, final String bootstrapServers) {
+    ProfileService(final KafkaStreams streams, final String profileEventsTopic, final String profileStoreName, final String searchStoreName,
+                   final String bootstrapServers) {
         this.streams = streams;
-        this.storeName = profileStoreName;
+        this.profileStoreName = profileStoreName;
+        this.searchStoreName = searchStoreName;
         this.topic = profileEventsTopic;
         Map<String, Object> serdeProps = new HashMap<>();
         final Properties producerProps = new Properties();
@@ -48,31 +49,33 @@ public class ProfileService {
     }
 
     @GET
+    @Path("/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ProfileBean searchProfile(@QueryParam("email") String email) {
+        return findProfileByKey(email, streams.store(searchStoreName, QueryableStoreTypes.<String, ProfileBean>keyValueStore()));
+    }
+
+    @GET
     @Path("/profile/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public ProfileBean getProfileByID(@PathParam("id") String id) {
-        System.out.println("IN GET METHOD");
-        System.out.println(id);
-        final ReadOnlyKeyValueStore<String, ProfileBean> store;
-        try {
-            store = streams.store(storeName, QueryableStoreTypes.<String, ProfileBean>keyValueStore());
-            if (store == null) {
-                System.out.println("NO STORE");
-                throw new NotFoundException();
-            }
-        } catch(InvalidStateStoreException ex) {
-            System.out.println(ex);
-            return null;
-        }
+        return findProfileByKey(id, streams.store(profileStoreName, QueryableStoreTypes.<String, ProfileBean>keyValueStore()));
+    }
 
-        // Get the value from the store
-        final ProfileBean value = store.get(id);
+    private ProfileBean findProfileByKey(String key, ReadOnlyKeyValueStore<String, ProfileBean> stateStore) {
+        final ProfileBean value = stateStore.get(key);
         if (value == null) {
-            System.out.println("NO PROFILE");
             throw new NotFoundException();
         }
-        System.out.println("RETURNING");
         return value;
+    }
+
+    @PUT
+    @Path("/profile/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateProfile(@PathParam("id") String id, ProfileBean profile) {
+        profileProducer.send(new ProducerRecord<String, ProfileEvent>(topic, id, new ProfileEvent("update", profile)));
+        return Response.status(200).entity(profile).build();
     }
 
     @POST
@@ -80,10 +83,16 @@ public class ProfileService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createProfile(ProfileBean profile) {
         profile.uid = newUUID();
-        System.out.println("IN POST METHOD");
-        System.out.println(profile.uid);
-        profileProducer.send(new ProducerRecord<String, ProfileEvent>(topic, profile.uid, new ProfileEvent(profile)));
+        profileProducer.send(new ProducerRecord<String, ProfileEvent>(topic, profile.uid, new ProfileEvent("create", profile)));
         return Response.status(201).entity(profile).build();
+    }
+
+    @DELETE
+    @Path("/profile/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteProfile(@PathParam("id") String id) {
+        profileProducer.send(new ProducerRecord<String, ProfileEvent>(topic, id, new ProfileEvent("delete")));
+        return Response.status(204).build();
     }
 
     private String newUUID() {

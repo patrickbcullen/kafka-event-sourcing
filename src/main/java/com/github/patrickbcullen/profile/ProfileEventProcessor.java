@@ -11,13 +11,15 @@ import org.apache.kafka.streams.state.KeyValueStore;
  */
 public class ProfileEventProcessor implements Processor<String, ProfileEvent> {
     private ProcessorContext context;
-    private KeyValueStore<String, ProfileBean> kvStore;
+    private KeyValueStore<String, ProfileBean> profileStore;
+    private KeyValueStore<String, ProfileBean> searchStore;
 
     @Override
     public void init(ProcessorContext context) {
         this.context = context;
         this.context.schedule(10);
-        kvStore = (KeyValueStore) context.getStateStore(ProfileApp.PROFILE_STORE_NAME);
+        profileStore = (KeyValueStore) context.getStateStore(ProfileApp.PROFILE_STORE_NAME);
+        searchStore = (KeyValueStore) context.getStateStore(ProfileApp.SEARCH_STORE_NAME);
     }
 
     @Override
@@ -27,7 +29,7 @@ public class ProfileEventProcessor implements Processor<String, ProfileEvent> {
             return;
         }
 
-        ProfileBean profileBean = kvStore.get(uid);
+        ProfileBean profileBean = profileStore.get(uid);
 
         switch (profileEvent.eventType) {
             case "delete":
@@ -36,13 +38,16 @@ public class ProfileEventProcessor implements Processor<String, ProfileEvent> {
                 profileBean = new ProfileBean(profileEvent.uid, profileEvent.username, profileEvent.email);
             case "update":
                 if (profileEvent.email != null) {
+                    //remove the old email by tombstoning the previous record
+                    searchStore.put(profileBean.email, null);
                     profileBean.email = profileEvent.email;
                 }
                 if (profileEvent.username != null) {
                     profileBean.username = profileEvent.username;
                 }
         }
-        kvStore.put(uid, profileBean);
+        profileStore.put(uid, profileBean);
+        searchStore.put(profileBean.email, profileBean);
     }
 
     @Override
@@ -52,6 +57,7 @@ public class ProfileEventProcessor implements Processor<String, ProfileEvent> {
 
     @Override
     public void close() {
-        kvStore.close();
+        profileStore.close();
+        searchStore.close();
     }
 }
