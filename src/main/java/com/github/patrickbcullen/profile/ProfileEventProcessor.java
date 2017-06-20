@@ -30,6 +30,10 @@ public class ProfileEventProcessor implements Processor<String, ProfileEvent> {
         }
 
         ProfileBean profileBean = profileStore.get(uid);
+        String email = null;
+        if (profileBean != null) {
+            email = profileBean.email;
+        }
 
         switch (profileEvent.eventType) {
             case "delete":
@@ -47,7 +51,9 @@ public class ProfileEventProcessor implements Processor<String, ProfileEvent> {
                 }
         }
         profileStore.put(uid, profileBean);
-        searchStore.put(profileBean.email, profileBean);
+        if (email != null) {
+            searchStore.put(email, profileBean);
+        }
     }
 
     @Override

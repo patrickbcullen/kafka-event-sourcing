@@ -30,18 +30,18 @@ curl -XPOST -H "Content-Type: application/json" -d '{"username": "bob", "email":
 
 Then query for this user using the uid parameter returned from the POST command.
 ```
-curl -H "Accept: application/json" http://localhost:8080/api/profile/74292b21-0fbb-4f1d-a18f-fa80f947fa5d
+curl -XGET -H "Accept: application/json" http://localhost:8080/api/profile/74292b21-0fbb-4f1d-a18f-fa80f947fa5d
 ```
 
 Try querying for the user using email.
 ```
-curl -H "Accept: application/json" http://localhost:8080/api/search\?email\=bob1@mail.com
+curl -XGET -H "Accept: application/json" http://localhost:8080/api/search\?email\=bob1@mail.com
 ```
 
 Now change the email address.
 ```
 curl -XPUT -H "Content-Type: application/json" -d '{"username": "bob", "email": "bob2@mail.com"}' http://localhost:8080/api/profile/74292b21-0fbb-4f1d-a18f-fa80f947fa5d
-curl -H "Accept: application/json" http://localhost:8080/api/search\?email\=bob2@mail.com
+curl -XGET -H "Accept: application/json" http://localhost:8080/api/search\?email\=bob2@mail.com
 ```
 
 Finally delete the user.

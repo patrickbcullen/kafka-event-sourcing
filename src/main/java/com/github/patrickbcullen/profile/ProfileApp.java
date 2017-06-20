@@ -23,7 +23,6 @@ import java.util.Properties;
 public class ProfileApp {
 
     static final String PROFILE_EVENTS_TOPIC = "profile.events";
-    static final String PROFILE_STORE_TOPIC = "profile.topic";
     public static final String PROFILE_STORE_NAME = "profile.store";
     public static final String SEARCH_STORE_NAME = "search.store";
 
@@ -47,20 +46,7 @@ public class ProfileApp {
         streamsConfiguration.put(StreamsConfig.STATE_DIR_CONFIG, example.getPath());
 
         final KafkaStreams streams = createStreams(streamsConfiguration);
-        // Always (and unconditionally) clean local state prior to starting the processing topology.
-        // We opt for this unconditional call here because this will make it easier for you to play around with the example
-        // when resetting the application for doing a re-run (via the Application Reset Tool,
-        // http://docs.confluent.io/current/streams/developer-guide.html#application-reset-tool).
-        //
-        // The drawback of cleaning up local state prior is that your app must rebuilt its local state from scratch, which
-        // will take time and will require reading all the state-relevant data from the Kafka cluster over the network.
-        // Thus in a production scenario you typically do not want to clean up always as we do here but rather only when it
-        // is truly needed, i.e., only under certain conditions (e.g., the presence of a command line flag for your app).
-        // See `ApplicationResetExample.java` for a production-like example.
-        streams.cleanUp();
-        // Now that we have finished the definition of the processing topology we can actually run
-        // it via `start()`.  The Streams application as a whole can be launched just like any
-        // normal Java application that has a `main()` method.
+        //streams.cleanUp();
         streams.start();
 
         // Start the Restful proxy for servicing remote access to state stores

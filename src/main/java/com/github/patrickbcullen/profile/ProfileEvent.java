@@ -17,7 +17,8 @@ public class ProfileEvent {
         this.eventType = eventType;
     }
 
-    public ProfileEvent(String eventType) {
+    public ProfileEvent(String eventType, String uid) {
+        this.uid = uid;
         this.eventType = eventType;
     }
 }

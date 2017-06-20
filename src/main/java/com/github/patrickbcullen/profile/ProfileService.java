@@ -52,14 +52,16 @@ public class ProfileService {
     @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
     public ProfileBean searchProfile(@QueryParam("email") String email) {
-        return findProfileByKey(email, streams.store(searchStoreName, QueryableStoreTypes.<String, ProfileBean>keyValueStore()));
+        ReadOnlyKeyValueStore<String, ProfileBean> stateStore = waitUntilStoreIsQueryable(searchStoreName);
+        return findProfileByKey(email, stateStore);
     }
 
     @GET
     @Path("/profile/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public ProfileBean getProfileByID(@PathParam("id") String id) {
-        return findProfileByKey(id, streams.store(profileStoreName, QueryableStoreTypes.<String, ProfileBean>keyValueStore()));
+        ReadOnlyKeyValueStore<String, ProfileBean> stateStore = waitUntilStoreIsQueryable(profileStoreName);
+        return findProfileByKey(id, stateStore);
     }
 
     private ProfileBean findProfileByKey(String key, ReadOnlyKeyValueStore<String, ProfileBean> stateStore) {
@@ -68,6 +70,28 @@ public class ProfileService {
             throw new NotFoundException();
         }
         return value;
+    }
+
+    private ReadOnlyKeyValueStore<String, ProfileBean> waitUntilStoreIsQueryable(final String storeName) throws InvalidStateStoreException {
+        final long maxWaitMillis = 3000;
+        long currentWaitMillis = 0;
+
+        while (true) {
+            try {
+                return streams.store(storeName, QueryableStoreTypes.<String, ProfileBean>keyValueStore());
+            } catch (InvalidStateStoreException ex) {
+                // store not yet ready for querying
+                if (currentWaitMillis >= maxWaitMillis) {
+                    throw ex;
+                }
+                currentWaitMillis += 100;
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignore) {
+                    //ignore this exception
+                }
+            }
+        }
     }
 
     @PUT
@@ -91,7 +115,7 @@ public class ProfileService {
     @Path("/profile/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteProfile(@PathParam("id") String id) {
-        profileProducer.send(new ProducerRecord<String, ProfileEvent>(topic, id, new ProfileEvent("delete")));
+        profileProducer.send(new ProducerRecord<String, ProfileEvent>(topic, id, new ProfileEvent("delete", id)));
         return Response.status(204).build();
     }
 
