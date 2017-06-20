@@ -31,15 +31,18 @@ public class ProfileEventProcessor implements Processor<String, ProfileEvent> {
 
         ProfileBean profileBean = profileStore.get(uid);
         String email = null;
-        if (profileBean != null) {
-            email = profileBean.email;
-        }
 
         switch (profileEvent.eventType) {
             case "delete":
+                if (profileBean != null && profileBean.email != null) {
+                    email = profileBean.email;
+                }
                 profileBean = null;
+                break;
             case "create":
                 profileBean = new ProfileBean(profileEvent.uid, profileEvent.username, profileEvent.email);
+                email = profileBean.email;
+                break;
             case "update":
                 if (profileEvent.email != null) {
                     //remove the old email by tombstoning the previous record
@@ -49,6 +52,10 @@ public class ProfileEventProcessor implements Processor<String, ProfileEvent> {
                 if (profileEvent.username != null) {
                     profileBean.username = profileEvent.username;
                 }
+                if (profileBean != null && profileBean.email != null) {
+                    email = profileBean.email;
+                }
+                break;
         }
         profileStore.put(uid, profileBean);
         if (email != null) {
