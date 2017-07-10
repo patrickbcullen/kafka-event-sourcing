@@ -10,6 +10,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.*;
 import org.apache.kafka.streams.processor.StateStoreSupplier;
 import org.apache.kafka.streams.processor.TopologyBuilder;
+import org.apache.kafka.streams.state.HostInfo;
 import org.apache.kafka.streams.state.Stores;
 
 import java.io.File;
@@ -65,7 +66,9 @@ public class ProfileApp {
 
 
     static ProfileService startRestProxy(final KafkaStreams streams, final int port, final String bootstrapServers) throws Exception {
-        final ProfileService profileService = new ProfileService(streams, PROFILE_EVENTS_TOPIC, PROFILE_STORE_NAME, SEARCH_STORE_NAME, bootstrapServers);
+        final HostInfo hostInfo = new HostInfo("localhost", port);
+
+        final ProfileService profileService = new ProfileService(streams, hostInfo, PROFILE_EVENTS_TOPIC, PROFILE_STORE_NAME, SEARCH_STORE_NAME, bootstrapServers);
         profileService.start(port);
         return profileService;
     }
